@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Serah Terima CS - TVTOTO</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        .glass {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(148, 163, 184, 0.1);
+        }
+        .output-text {
+            font-family: 'Orbitron', monospace;
+            color: #f0f9ff;
+            text-shadow: 0 0 5px rgba(96, 165, 250, 0.5), 0 0 10px rgba(96, 165, 250, 0.3);
+            letter-spacing: 0.05em;
+            line-height: 1.6;
+        }
+        .output-text::-webkit-scrollbar {
+            width: 8px;
+        }
+        .output-text::-webkit-scrollbar-track {
+            background: rgba(30, 41, 59, 0.5);
+            border-radius: 4px;
+        }
+        .output-text::-webkit-scrollbar-thumb {
+            background: rgba(96, 165, 250, 0.5);
+            border-radius: 4px;
+        }
+        .output-text::-webkit-scrollbar-thumb:hover {
+            background: rgba(96, 165, 250, 0.7);
+        }
+        .glow-border {
+            box-shadow: 0 0 15px rgba(96, 165, 250, 0.3);
+            border: 1px solid rgba(96, 165, 250, 0.5);
+        }
+        button, input, select, textarea {
+            position: relative;
+            z-index: 10;
+        }
+        .checkbox-wrapper {
+            position: relative;
+            z-index: 10;
+        }
+        .notification {
+            animation: slideIn 0.3s ease-out;
+        }
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        .fade-out {
+            animation: fadeOut 0.3s ease-out forwards;
+        }
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+            }
+            to {
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen p-4 md:p-8">
+    <div class="max-w-7xl mx-auto space-y-6">
+        
+        <!-- Header -->
+        <div class="glass rounded-2xl p-6 border border-slate-700">
+            <h1 class="text-3xl font-bold text-white mb-2">📋 Serah Terima CS - TVTOTO</h1>
+            <p class="text-slate-400">Sistem Manajemen Serah Terima Shift</p>
+        </div>
+
+        <!-- Shift Selector -->
+        <div class="glass rounded-2xl p-6 border border-slate-700">
+            <h2 class="text-xl font-bold text-white mb-4">🕐 Pilih Shift</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <button onclick="selectShift('PAGI')" id="btnPAGI" class="bg-gradient-to-r from-yellow-600 to-orange-600 hover:from-yellow-500 hover:to-orange-500 text-white font-bold py-4 px-6 rounded-xl transition-all duration-200 transform hover:scale-105">
+                    ☀️ Shift PAGI
+                </button>
+                <button onclick="selectShift('SORE')" id="btnSORE" class="bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-500 hover:to-red-500 text-white font-bold py-4 px-6 rounded-xl transition-all duration-200 transform hover:scale-105">
+                    🌅 Shift SORE
+                </button>
+                <button onclick="selectShift('MALAM')" id="btnMALAM" class="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-bold py-4 px-6 rounded-xl transition-all duration-200 transform hover:scale-105">
+                    🌙 Shift MALAM
+                </button>
+            </div>
+            <div class="mt-4 p-4 bg-blue-900/20 border border-blue-700 rounded-lg">
+                <p class="text-blue-300"><strong>Shift:</strong> <span id="selectedShift">Belum dipilih</span></p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            
+            <!-- Add Item -->
+            <div class="glass rounded-2xl p-6 border border-slate-700">
+                <h2 class="text-xl font-bold text-white mb-4">➕ Tambah Item</h2>
+                
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-300 mb-2">Tipe Item</label>
+                        <select id="itemType" onchange="toggleItemType()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-3 text-white focus:border-blue-500 focus:outline-none">
+                            <option value="checklist">✅ Checklist</option>
+                            <option value="text">📝 Text Biasa</option>
+                        </select>
+                    </div>
+
+                    <!-- Checklist Section -->
+                    <div id="checklistSection">
+                        <div class="bg-slate-900/50 border border-slate-700 rounded-lg p-4 space-y-2 max-h-96 overflow-y-auto">
+                            <p class="text-sm font-bold text-blue-400">Facebook:</p>
+                            <div class="checkbox-wrapper">
+                                <label class="flex items-center gap-2 text-sm text-slate-300 cursor-pointer hover:text-white transition-colors">
+                                    <input type="checkbox" id="fb1" class="w-4 h-4 accent-blue-500">
+                                    Posting Mingguan (Selasa & Jumat)
+                                </label>
+                            </div>
+                            <div class="checkbox-wrapper">
+                                <label class="flex items-center gap-2 text-sm text-slate-300 cursor-pointer hover:text-white transition-colors">
+                                    <input type="checkbox" id="fb2" class="w-4 h-4 accent-blue-500">
+                                    Maintenance
+                                </label>
+                            </div>
+                            <div class="checkbox-wrapper">
+                                <label class="flex items-center gap-2 text-sm text-slate-300 cursor-pointer hover:text-white transition-colors">
+                                    <input type="checkbox" id="fb3" class="w-4 h-4 accent-blue-500">
+                                    Perubahan Jadwal Pasaran
+                                </label>
+                            </div>
+
+                            <p class="text-sm font-bold text-green-400 mt-3">Channel WA:</p>
+                            <div class="checkbox-wrapper">
+                                <label class="flex items-center gap-2 text-sm text-slate-300 cursor-pointer hover:text-white transition-colors">
+                                    <input type="checkbox" id="wa1" class="w-4 h-4 accent-green-500">
+                                    Prediksi pasaran besar setiap hari 1x
+                                </label>
+                            </div>
+                            <div class="checkbox-wrapper">
+                                <label class="flex items-center gap-2 text-sm text-slate-300 cursor-pointer hover:text-white transition-colors">
+                                    <input type="checkbox" id="wa2" class="w-4 h-4 accent-green-500">
+                                    Syair / Prediksi
+                                </label>
+                            </div>
+                            <div class="checkbox-wrapper">
+                                <label class="flex items-center gap-2 text-sm text-slate-300 cursor-pointer hover:text-white transition-colors">
+                                    <input type="checkbox" id="wa3" class="w-4 h-4 accent-green-500">
+                                    Kemenangan Besar diatas 30Jt 1x
+                                </label>
+                            </div>
+                            <div class="checkbox-wrapper">
+                                <label class="flex items-center gap-2 text-sm text-slate-300 cursor-pointer hover:text-white transition-colors">
+                                    <input type="checkbox" id="wa4" class="w-4 h-4 accent-green-500">
+                                    Kemenangan Besar diatas 30Jt 2x
+                                </label>
+                            </div>
+                            <div class="checkbox-wrapper">
+                                <label class="flex items-center gap-2 text-sm text-slate-300 cursor-pointer hover:text-white transition-colors">
+                                    <input type="checkbox" id="wa5" class="w-4 h-4 accent-green-500">
+                                    Maintenance
+                                </label>
+                            </div>
+                            <div class="checkbox-wrapper">
+                                <label class="flex items-center gap-2 text-sm text-slate-300 cursor-pointer hover:text-white transition-colors">
+                                    <input type="checkbox" id="wa6" class="w-4 h-4 accent-green-500">
+                                    Link Alternatif Seminggu 1x
+                                </label>
+                            </div>
+                            <div class="checkbox-wrapper">
+                                <label class="flex items-center gap-2 text-sm text-slate-300 cursor-pointer hover:text-white transition-colors">
+                                    <input type="checkbox" id="wa7" class="w-4 h-4 accent-green-500">
+                                    Info Penting Keterlambatan Result
+                                </label>
+                            </div>
+                            <div class="checkbox-wrapper">
+                                <label class="flex items-center gap-2 text-sm text-slate-300 cursor-pointer hover:text-white transition-colors">
+                                    <input type="checkbox" id="wa8" class="w-4 h-4 accent-green-500">
+                                    Posting Mingguan rutin (Selasa & Jumat)
+                                </label>
+                            </div>
+                            <div class="checkbox-wrapper">
+                                <label class="flex items-center gap-2 text-sm text-slate-300 cursor-pointer hover:text-white transition-colors">
+                                    <input type="checkbox" id="wa9" class="w-4 h-4 accent-green-500">
+                                    Perubahan Jadwal Pasaran
+                                </label>
+                            </div>
+
+                            <p class="text-sm font-bold text-purple-400 mt-3">Wordpress:</p>
+                            <div class="checkbox-wrapper">
+                                <label class="flex items-center gap-2 text-sm text-slate-300 cursor-pointer hover:text-white transition-colors">
+                                    <input type="checkbox" id="wp1" class="w-4 h-4 accent-purple-500">
+                                    Kemenangan besar di atas 80jt
+                                </label>
+                            </div>
+                            <div class="checkbox-wrapper">
+                                <label class="flex items-center gap-2 text-sm text-slate-300 cursor-pointer hover:text-white transition-colors">
+                                    <input type="checkbox" id="wp2" class="w-4 h-4 accent-purple-500">
+                                    Syair
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Text Section -->
+                    <div id="textSection" style="display: none;">
+                        <textarea id="textInput" rows="4" placeholder="Masukkan text..." class="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-3 text-white resize-none focus:border-blue-500 focus:outline-none"></textarea>
+                    </div>
+
+                    <button onclick="addItem()" class="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-bold py-3 rounded-xl transition-all duration-200 transform hover:scale-105">
+                        ➕ Tambah Item
+                    </button>
+                </div>
+            </div>
+
+            <!-- Items List -->
+            <div class="glass rounded-2xl p-6 border border-slate-700">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-xl font-bold text-white">📝 Daftar Item</h2>
+                    <div class="flex items-center gap-2">
+                        <span class="bg-blue-600 px-3 py-1 rounded-full text-sm font-bold" id="itemCount">0</span>
+                        <button onclick="clearAllData()" class="bg-red-600 hover:bg-red-500 text-white font-bold py-1 px-3 rounded-lg text-sm transition-all duration-200 transform hover:scale-105">
+                            🗑️ Hapus Semua
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="itemsList" class="space-y-3 max-h-96 overflow-y-auto">
+                    <div class="text-center text-slate-400 py-8">Belum ada item</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Output -->
+        <div class="glass rounded-2xl p-6 glow-border">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-xl font-bold text-white">📄 Hasil</h2>
+                <div class="flex gap-2">
+                    <button onclick="generate()" class="bg-green-600 hover:bg-green-500 text-white font-bold py-2 px-6 rounded-lg transition-all duration-200 transform hover:scale-105">
+                        🔄 Generate
+                    </button>
+                    <button onclick="copy()" class="bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-6 rounded-lg transition-all duration-200 transform hover:scale-105">
+                        📋 Copy
+                    </button>
+                </div>
+            </div>
+            
+            <textarea id="output" rows="15" readonly class="w-full bg-slate-900/80 rounded-lg px-4 py-3 output-text text-base resize-none focus:outline-none"></textarea>
+        </div>
+
+    </div>
+
+    <!-- Notification Container -->
+    <div id="notificationContainer" class="fixed top-4 right-4 z-50 space-y-2"></div>
+
+    <script>
+        // Storage keys
+        const STORAGE_KEYS = {
+            SHIFT: 'tvtoto_shift',
+            ITEMS: 'tvtoto_items',
+            OUTPUT: 'tvtoto_output'
+        };
+
+        let currentShift = '';
+        let items = [];
+
+        // Initialize app with data from localStorage
+        function initializeApp() {
+            // Load shift
+            const savedShift = localStorage.getItem(STORAGE_KEYS.SHIFT);
+            if (savedShift) {
+                selectShift(savedShift);
+            }
+
+            // Load items
+            const savedItems = localStorage.getItem(STORAGE_KEYS.ITEMS);
+            if (savedItems) {
+                try {
+                    items = JSON.parse(savedItems);
+                    displayItems();
+                } catch (e) {
+                    console.error('Error loading items:', e);
+                    items = [];
+                }
+            }
+
+            // Load output
+            const savedOutput = localStorage.getItem(STORAGE_KEYS.OUTPUT);
+            if (savedOutput) {
+                document.getElementById('output').value = savedOutput;
+            }
+        }
+
+        // Save data to localStorage
+        function saveToLocalStorage() {
+            localStorage.setItem(STORAGE_KEYS.SHIFT, currentShift);
+            localStorage.setItem(STORAGE_KEYS.ITEMS, JSON.stringify(items));
+        }
+
+        function selectShift(shift) {
+            currentShift = shift;
+            document.querySelectorAll('[id^="btn"]').forEach(btn => {
+                btn.classList.remove('ring-4', 'ring-blue-400');
+            });
+            document.getElementById('btn' + shift).classList.add('ring-4', 'ring-blue-400');
+            document.getElementById('selectedShift').textContent = shift;
+            saveToLocalStorage();
+        }
+
+        function toggleItemType() {
+            const type = document.getElementById('itemType').value;
+            if (type === 'checklist') {
+                document.getElementById('checklistSection').style.display = 'block';
+                document.getElementById('textSection').style.display = 'none';
+            } else {
+                document.getElementById('checklistSection').style.display = 'none';
+                document.getElementById('textSection').style.display = 'block';
+            }
+        }
+
+        function addItem() {
+            if (!currentShift) {
+                showNotification('Pilih shift terlebih dahulu!', 'error');
+                return;
+            }
+
+            const type = document.getElementById('itemType').value;
+            const item = { id: Date.now(), type };
+
+            if (type === 'checklist') {
+                item.data = {
+                    fb1: document.getElementById('fb1').checked,
+                    fb2: document.getElementById('fb2').checked,
+                    fb3: document.getElementById('fb3').checked,
+                    wa1: document.getElementById('wa1').checked,
+                    wa2: document.getElementById('wa2').checked,
+                    wa3: document.getElementById('wa3').checked,
+                    wa4: document.getElementById('wa4').checked,
+                    wa5: document.getElementById('wa5').checked,
+                    wa6: document.getElementById('wa6').checked,
+                    wa7: document.getElementById('wa7').checked,
+                    wa8: document.getElementById('wa8').checked,
+                    wa9: document.getElementById('wa9').checked,
+                    wp1: document.getElementById('wp1').checked,
+                    wp2: document.getElementById('wp2').checked
+                };
+            } else {
+                const text = document.getElementById('textInput').value.trim();
+                if (!text) {
+                    showNotification('Text tidak boleh kosong!', 'error');
+                    return;
+                }
+                item.text = text;
+            }
+
+            items.push(item);
+            displayItems();
+            clearInputs();
+            saveToLocalStorage();
+            showNotification('Item berhasil ditambahkan!', 'success');
+        }
+
+        function deleteItem(id) {
+            if (confirm('Hapus item ini?')) {
+                items = items.filter(i => i.id !== id);
+                displayItems();
+                saveToLocalStorage();
+                showNotification('Item berhasil dihapus!', 'success');
+            }
+        }
+
+        function clearAllData() {
+            if (confirm('Hapus semua data? Ini tidak dapat dibatalkan!')) {
+                items = [];
+                currentShift = '';
+                document.getElementById('output').value = '';
+                
+                // Clear localStorage
+                localStorage.removeItem(STORAGE_KEYS.SHIFT);
+                localStorage.removeItem(STORAGE_KEYS.ITEMS);
+                localStorage.removeItem(STORAGE_KEYS.OUTPUT);
+                
+                // Reset UI
+                document.querySelectorAll('[id^="btn"]').forEach(btn => {
+                    btn.classList.remove('ring-4', 'ring-blue-400');
+                });
+                document.getElementById('selectedShift').textContent = 'Belum dipilih';
+                displayItems();
+                
+                showNotification('Semua data telah dihapus!', 'success');
+            }
+        }
+
+        function displayItems() {
+            const container = document.getElementById('itemsList');
+            
+            if (items.length === 0) {
+                container.innerHTML = '<div class="text-center text-slate-400 py-8">Belum ada item</div>';
+                document.getElementById('itemCount').textContent = '0';
+                return;
+            }
+
+            container.innerHTML = items.map(item => {
+                if (item.type === 'checklist') {
+                    return `
+                        <div class="bg-slate-900/50 border border-slate-700 rounded-lg p-4 hover:bg-slate-900/70 transition-colors">
+                            <div class="flex items-start justify-between">
+                                <div class="flex-1">
+                                    <p class="text-white font-bold mb-2">✅ Checklist</p>
+                                    <div class="text-xs space-y-1">
+                                        <div class="text-blue-400">FB: ${Object.keys(item.data).filter(k => k.startsWith('fb') && item.data[k]).length}/3</div>
+                                        <div class="text-green-400">WA: ${Object.keys(item.data).filter(k => k.startsWith('wa') && item.data[k]).length}/9</div>
+                                        <div class="text-purple-400">WP: ${Object.keys(item.data).filter(k => k.startsWith('wp') && item.data[k]).length}/2</div>
+                                    </div>
+                                </div>
+                                <button onclick="deleteItem(${item.id})" class="text-red-400 hover:text-red-300 px-2 py-1 rounded text-xl transition-colors">
+                                    ✕
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    return `
+                        <div class="bg-slate-900/50 border border-slate-700 rounded-lg p-4 hover:bg-slate-900/70 transition-colors">
+                            <div class="flex items-start justify-between">
+                                <div class="flex-1">
+                                    <p class="text-white text-sm">${item.text}</p>
+                                </div>
+                                <button onclick="deleteItem(${item.id})" class="text-red-400 hover:text-red-300 px-2 py-1 rounded text-xl transition-colors">
+                                    ✕
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }
+            }).join('');
+
+            document.getElementById('itemCount').textContent = items.length;
+        }
+
+        function clearInputs() {
+            document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+            document.getElementById('textInput').value = '';
+        }
+
+        function generate() {
+            if (!currentShift) {
+                showNotification('Pilih shift terlebih dahulu!', 'error');
+                return;
+            }
+
+            if (items.length === 0) {
+                showNotification('Belum ada item!', 'error');
+                return;
+            }
+
+            let output = `Serah terima CS ${currentShift}\n`;
+            output += `> LINK& YT AMAN : \n`;
+
+            items.forEach(item => {
+                if (item.type === 'checklist') {
+                    output += `> "Facebook\n`;
+                    output += `Posting Mingguan (Selasa & Jumat) = ${item.data.fb1 ? '✅' : '❌'}\n`;
+                    output += `Maintenance = ${item.data.fb2 ? '✅' : '❌'}\n`;
+                    output += `Perubahan Jadwal Pasaran = ${item.data.fb3 ? '✅' : '❌'}\n`;
+                    output += `Channel WA \n`;
+                    output += `Prediksi pasaran besar setiap hari 1x = ${item.data.wa1 ? '✅' : '❌'}\n`;
+                    output += `Syair / Prediksi = ${item.data.wa2 ? '✅' : '❌'}\n`;
+                    output += `Kemenangan Besar diatas 30Jt 1x =  ${item.data.wa3 ? '✅' : '❌'}\n`;
+                    output += `Kemenangan Besar diatas 30Jt 2x =  ${item.data.wa4 ? '✅' : '❌'}\n`;
+                    output += `Maintenance = ${item.data.wa5 ? '✅' : '❌'}\n`;
+                    output += `Link Alternatif Seminggu 1x = ${item.data.wa6 ? '✅' : '❌'}\n`;
+                    output += `Info Penting Keterlambatan Result = ${item.data.wa7 ? '✅' : '❌'}\n`;
+                    output += `Posting Mingguan rutin (Selasa & Jumat) = ${item.data.wa8 ? '✅' : '❌'}\n`;
+                    output += `Perubahan Jadwal Pasaran = ${item.data.wa9 ? '✅' : '❌'}\n`;
+                    output += `Wordpress \n`;
+                    output += `Kemenangan besar di atas 80jt : ${item.data.wp1 ? '✅' : '❌'}\n`;
+                    output += `Syair  = ${item.data.wp2 ? '✅' : '❌'}"\n\n`;
+                } else {
+                    output += `> "${item.text}"\n\n`;
+                }
+            });
+
+            document.getElementById('output').value = output;
+            localStorage.setItem(STORAGE_KEYS.OUTPUT, output);
+            showNotification('Data berhasil digenerate!', 'success');
+        }
+
+        function copy() {
+            const textarea = document.getElementById('output');
+            if (!textarea.value) {
+                showNotification('Generate dulu!', 'error');
+                return;
+            }
+            textarea.select();
+            document.execCommand('copy');
+            showNotification('✅ Berhasil di-copy!', 'success');
+        }
+
+        function showNotification(message, type) {
+            const container = document.getElementById('notificationContainer');
+            const notification = document.createElement('div');
+            
+            notification.className = `notification px-6 py-3 rounded-lg text-white font-bold ${
+                type === 'success' ? 'bg-green-600' : 'bg-red-600'
+            }`;
+            notification.textContent = message;
+            
+            container.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.classList.add('fade-out');
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        // Initialize the app when the page loads
+        document.addEventListener('DOMContentLoaded', initializeApp);
+    </script>
+</body>
+</html>
